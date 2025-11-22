@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from pydantic import BaseModel
 
@@ -8,8 +9,18 @@ from ai_service import generate_lesson_response
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+print("CORS Middleware Added")
+
 @app.on_event("startup")
 def startup_event():
+    print("Startup Event Triggered")
     init_db()
 
 @app.get("/")

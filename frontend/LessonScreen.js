@@ -126,33 +126,39 @@ export default function LessonScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <FlatList
-        ref={flatListRef}
-        data={messages}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={styles.list}
-        onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
-      />
-
-      {loading && <Text style={styles.typing}>AI is typing...</Text>}
-
-      <View style={styles.inputContainer}>
-        <TextInput
-            style={styles.input}
-            value={inputText}
-            onChangeText={setInputText}
-            placeholder="Ask a question..."
-            onSubmitEditing={sendMessage}
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoiding}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+      >
+        <FlatList
+          ref={flatListRef}
+          data={messages}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.list}
+          onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
         />
-        <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-            <Text style={styles.sendText}>Send</Text>
-        </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity style={styles.completeButton} onPress={markComplete}>
-          <Text style={styles.completeText}>Mark Complete & Finish</Text>
-      </TouchableOpacity>
+        {loading && <Text style={styles.typing}>AI is typing...</Text>}
+
+        <View style={styles.inputContainer}>
+          <TextInput
+              style={styles.input}
+              value={inputText}
+              onChangeText={setInputText}
+              placeholder="Ask a question..."
+              onSubmitEditing={sendMessage}
+          />
+          <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+              <Text style={styles.sendText}>Send</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.completeButton} onPress={markComplete}>
+            <Text style={styles.completeText}>Mark Complete & Finish</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -161,6 +167,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F5F5',
+  },
+  keyboardAvoiding: {
+    flex: 1,
   },
   list: {
     padding: 16,
